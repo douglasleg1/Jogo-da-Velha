@@ -52,12 +52,12 @@ def vencedor():
     i=1
     v=1
     while i<=7:
-        if tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2]=="X":#ganhou na orizontal
+        if tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2]=="X":
             return 1
             i = 1
             break
 
-        elif tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2] =="O":#ganhou na orizontal
+        elif tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2] =="O":
             i = 1
             return 2
             break
@@ -94,9 +94,7 @@ def vencedor():
 
         i+=3
         v+=1
-
-jodaor1=''
-jogador2=''
+           
 jogador1 = input("Nome do primeiro jogador: \n ")
 jogador2 = input("Nome do segundo jogador:  \n")
 jogadores = jogador1, jogador2
