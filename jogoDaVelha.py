@@ -48,58 +48,65 @@ def jogada(pos,jogador_da_vez):
             pos=int(input("ops posicao ocupada, tente novamente:  \n"))
     print("\n" * 60)
 
+
+def testa_pocicoes(lista=[]):
+
+    """Como a estrutura para verificar é a mesma, esta funcao apenas reecebe a lista que contem as cordenadas possiveis para vitorias
+    sendo elas as horizontais, verticais e diagonal... """
+
+    for cordenadas in lista:
+        # variaveis que vao receber as coordenadas da lista lista_cordenadas_horizontal=[[1,2,3],[4,5,6],[7,8,9]]
+        x0 = cordenadas[0]
+        x1 = cordenadas[1]
+        x2 = cordenadas[2]
+
+        if tabuleiro[x0] == tabuleiro[x1] == tabuleiro[x2]:
+            # caso entre aqui é porque ele encontrou uma repetição, agora basta saber qual jogador ganhou, testado uma delas ja que todas sao iguais... X ou 0
+
+            if tabuleiro[x0] == "X":
+                return 1
+            elif tabuleiro[x0] == "O":
+                return 2
+    return None
+
 def vencedor():
-    i=1
-    v=1
-    while i<=7:
-        if tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2]=="X":#ganhou na orizontal
-            return 1
-            i = 1
-            break
+    """
+    vemos as cordenadas, com isso da pra entender as listas abaixo que contem as possiveis sequencias de vitoria, de ambos os jogadores
+    	      |     |
+		   7  |  8  |  9
+		 _____|_____|_____
+		      |     |
+		   4  |  5  |  6
+		 _____|_____|_____
+		      |     |
+		   1  |  2  |  3
+		      |     |
 
-        elif tabuleiro[i] ==tabuleiro[i+1] and tabuleiro[i+1] ==tabuleiro[i+2]and tabuleiro[i+2] =="O":#ganhou na orizontal
-            i = 1
-            return 2
-            break
-        aux=v+3
-        if tabuleiro[v] == tabuleiro[v+3] and tabuleiro[v] == tabuleiro[aux+3] and  tabuleiro[aux+3] == "X":
-            i = 1
-            return 1
+    """
 
-            break
-        elif tabuleiro[v] == tabuleiro[v+3] and tabuleiro[v] == tabuleiro[aux+3] and  tabuleiro[aux+3]  == "O":
-            i = 1
-            return 2
-            break
-        #diagonal 1
-        if tabuleiro[7] == tabuleiro[5] and tabuleiro[5] == tabuleiro[3] and tabuleiro[3] == "X":
 
-            i = 1
-            return 1
-            break
-        elif tabuleiro[7] == tabuleiro[5] and tabuleiro[5] == tabuleiro[3] and tabuleiro[3] == "O":
-            i = 1
-            return 2
-            break
-        #diagonal 2
-        if tabuleiro[9] == tabuleiro[5] and tabuleiro[5] == tabuleiro[1] and tabuleiro[1] == "X":
-            i = 1
-            return 1
-            break
-        elif tabuleiro[9] == tabuleiro[5] and tabuleiro[5] == tabuleiro[1] and tabuleiro[1] ==  "O":
-            i = 1
+    lista_cordenadas_horizontal=[[1,2,3],[4,5,6],[7,8,9]]
+    lista_cordenadas_vertical=[[7,4,1],[8,5,2],[9,6,3]]
+    lista_cordendas_diagonal=[[7,5,3],[9,5,1]]
 
-            return 2
-            break
+    resultado_horizontal=testa_pocicoes(lista_cordenadas_horizontal)
+    if not resultado_horizontal==None:
+        return resultado_horizontal
 
-        i+=3
-        v+=1
+    resultado_vertical = testa_pocicoes(lista_cordenadas_vertical)
+    if not resultado_vertical == None:
+        return resultado_vertical
 
-jodaor1=''
-jogador2=''
-jogador1 = input("Nome do primeiro jogador: \n ")
-jogador2 = input("Nome do segundo jogador:  \n")
-jogadores = jogador1, jogador2
+    resultado_diagonal = testa_pocicoes(lista_cordendas_diagonal)
+    if not resultado_diagonal == None:
+        return resultado_diagonal
+
+
+
+jogador1 = input("Nome do primeiro jogador: ")
+jogador2 = input("Nome do segundo jogador: ")
+jogadores.append(jogador1)
+jogadores.append(jogador2)
 
 while True:
 
