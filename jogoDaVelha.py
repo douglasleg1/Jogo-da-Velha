@@ -1,6 +1,6 @@
 tabuleiro = ['', '1', '2', '3',
              '4', '5', '6', '7',
-             '8', '9', '2', ' ', ]
+             '8', '9']
 
 jogadas_possiveis = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -29,14 +29,13 @@ def imprime():
 
 
 def limpar_tabuleiro():
-    for l in range(11):
+    for l in range(10):
         tabuleiro[l] = " "
 
 
 def jogada(pos, jogador_da_vez):
     while True:
         if tabuleiro[pos] == ' ':
-            print(jogador_da_vez)
             if jogador_da_vez == 0:
                 tabuleiro[pos] = 'X'
                 return 1
@@ -47,7 +46,7 @@ def jogada(pos, jogador_da_vez):
         else:
             print("\n" * 80)
             imprime()
-            pos = int(input("ops posicao ocupada, tente novamente:  \n"))
+            pos = int(input("Posição ocupada, tente novamente:  \n"))
     print("\n" * 60)
 
 
@@ -113,41 +112,39 @@ while True:
     limpar_tabuleiro()
     imprime()
 
-    while True:
+    while jogadas <= 9:
 
-        if jogadas <= 9:
+        while True:
+            pos = input(" Uma jogada %s: " % jogadores[jogador_da_vez])
 
-            while True:
-                pos = input(" Uma jogada %s: " % jogadores[jogador_da_vez])
-
-                if pos in jogadas_possiveis:
-                    pos = int(pos)
-                    break
-                else:
-                    print("\n" * 80)
-                    imprime()
-                    print("***POSICAO INVALIDA*** Jogue novamente")
-
-            jogador_da_vez = jogada(pos, jogador_da_vez)
-            imprime()
-            venceu = vencedor()
-            if venceu == 1:
-                print("parabens %s" % jogadores[0])
-                vitorias_um += 1
-                break
-            elif venceu == 2:
-                print("parabens %s" % jogadores[1])
-                vitorias_dois += 1
-                break
-            elif jogadas > 9:
-
+            if pos in jogadas_possiveis:
+                pos = int(pos)
                 break
             else:
-                jogadas += 1
-        else:
-            print("Partida empatada,nenhum vencendor")
-            empates += 1
+                print("\n" * 80)
+                imprime()
+                print("***POSICAO INVALIDA***\nJogue novamente")
+
+        jogador_da_vez = jogada(pos, jogador_da_vez)
+        imprime()
+        venceu = vencedor()
+        if venceu == 1:
+            print("Parabéns %s, você venceu!" % jogadores[0])
+            vitorias_um += 1
             break
+        elif venceu == 2:
+            print("Parabéns %s, você venceu!" % jogadores[1])
+            vitorias_dois += 1
+            break
+        elif jogadas > 9:
+
+            break
+        else:
+            jogadas += 1
+    else:
+        print("Partida empatada,nenhum vencendor")
+        empates += 1
+        break
 
     escolha = input("Deseja jogar novamente com os mesmos jogadores S/N, se deseja sair aperte outra tecla")
     if escolha.upper() == 'N':
