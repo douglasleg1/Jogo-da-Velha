@@ -1,168 +1,135 @@
-tabuleiro = ['', '1', '2', '3',
-             '4', '5', '6', '7',
-             '8', '9']
-
-jogadas_possiveis = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-
-jogadas = 1
-jogador_da_vez = 0
-
-vitorias_um = 0
-vitorias_dois = 0
-empates = 0
-
-jogadores = []
+tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
 
 
 def imprime():
     print("")
     print("\t\t      |     |     ")
-    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[7], tabuleiro[8], tabuleiro[9]))
+    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[6], tabuleiro[7], tabuleiro[8]))
     print("\t\t _____|_____|_____")
     print("\t\t      |     |     ")
-    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[4], tabuleiro[5], tabuleiro[6]))
+    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[3], tabuleiro[4], tabuleiro[5]))
     print("\t\t _____|_____|_____")
     print("\t\t      |     |     ")
-    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[1], tabuleiro[2], tabuleiro[3]))
+    print("\t\t   %s  |  %s  |  %s " % (tabuleiro[0], tabuleiro[1], tabuleiro[2]))
     print("\t\t      |     |     ")
     print("")
 
 
-def limpar_tabuleiro():
-    for l in range(10):
-        tabuleiro[l] = " "
+def CondVitoria(tabuleiro):
+    """
+    GIven a tabuleiro checks if it is in a winning state.
+
+    Arguments:
+          tabuleiro: a list containing X,O or -.
+
+    Return Value:
+           True if tabuleiro in winning state. Else False
+    """
+    ### check if any of the rows has winning combination
+    for i in range(3):
+        if len(set(tabuleiro[i * 3:i * 3 + 3])) is 1 and tabuleiro[i * 3] is not '-': return True
+    ### check if any of the Columns has winning combination
+    for i in range(3):
+        if (tabuleiro[i] is tabuleiro[i + 3]) and (tabuleiro[i] is tabuleiro[i + 6]) and tabuleiro[i] is not '-':
+            return True
+    ### 2,4,6 and 0,4,8 cases
+    if tabuleiro[0] is tabuleiro[4] and tabuleiro[4] is tabuleiro[8] and tabuleiro[4] is not '-':
+        return True
+    if tabuleiro[2] is tabuleiro[4] and tabuleiro[4] is tabuleiro[6] and tabuleiro[4] is not '-':
+        return True
+    return False
 
 
-def jogada(pos, jogador_da_vez):
+def proximaJogada(tabuleiro, player):
+    if len(set(tabuleiro)) == 1: return 0, 4
+
+    proximoJogador = 'X' if player == 'O' else 'O'
+    if CondVitoria(tabuleiro):
+        if player is 'X':
+            return -1, -1
+        else:
+            return 1, -1
+    res_list = []  # lista com os resultados
+    c = tabuleiro.count('-')  # contador de espaços vazios
+    if c is 0:
+        return 0, -1
+    _list = []  # list com as posições onde '-' aparece
+    for i in range(len(tabuleiro)):
+        if tabuleiro[i] == '-':
+            _list.append(i)
+    for i in _list:
+        tabuleiro[i] = player
+        ret, move = proximaJogada(tabuleiro, proximoJogador)
+        res_list.append(ret)
+        tabuleiro[i] = '-'
+    if player is 'X':
+        maxele = max(res_list)
+        return maxele, _list[res_list.index(maxele)]
+    else:
+        minele = min(res_list)
+        return minele, _list[res_list.index(minele)]
+
+
+def test():
+    assert CondVitoria(list("XXX---OOO")) == True
+    assert CondVitoria(list('X---OO--X')) == False
+    assert CondVitoria(list('X--X--X--')) == True
+    assert CondVitoria(list('X-O-OO--X')) == False
+    assert CondVitoria(list('X-OOX--OX')) == True
+    assert CondVitoria(list('X-OOO-O-X')) == True
+    assert proximaJogada(list('X----O-XO'), 'X') == (1, 2)
+    assert proximaJogada(list('OXX---XOO'), 'X') == (1, 4)
+    assert proximaJogada(list('XX---OO-O'), 'X') == (1, 2)
+    assert proximaJogada(list('---------'), 'X') == (0, 4)
+    assert proximaJogada(list('XXOOO-XO-'), 'X') == (0, 5)
+    assert proximaJogada(list('OO-XXO-XO'), 'X') == (0, 2)
+    assert proximaJogada(list('XX-OO-XO-'), 'O') == (-1, 5)
+    assert proximaJogada(list('XX--O-XOO'), 'O') == (1, 2)
+    return "Casos de teste passados"
+
+
+global player
+player = 'X'
+
+
+def jogada(player):
+    imprime()
     while True:
-        if tabuleiro[pos] == ' ':
-            if jogador_da_vez == 0:
-                tabuleiro[pos] = 'X'
-                return 1
-            elif jogador_da_vez == 1:
-                tabuleiro[pos] = "O"
-                return 0
-            break
-        else:
-            print("\n" * 80)
-            imprime()
-            pos = int(input("Posição ocupada, tente novamente:  \n"))
-    print("\n" * 60)
+        proximo = proximaJogada(tabuleiro, player)
+        if proximo[1] != -1:
+            if player == 'O':
+                proximo = proximaJogada(tabuleiro, player)
+                print('MinMax jogando')
+                jogada = proximo[1] + 1
 
-
-def testa_pocicoes(lista=[]):
-    """Como a estrutura para verificar é a mesma, esta funcao apenas reecebe a lista que contem as cordenadas possiveis para vitorias
-    sendo elas as horizontais, verticais e diagonal... """
-
-    for cordenadas in lista:
-        # variaveis que vao receber as coordenadas das listas que estao na funcao vencedor...
-        x0 = cordenadas[0]
-        x1 = cordenadas[1]
-        x2 = cordenadas[2]
-
-        if tabuleiro[x0] == tabuleiro[x1] == tabuleiro[x2]:
-            # caso entre aqui é porque ele encontrou uma repetição, agora basta saber qual jogador ganhou, testado uma delas ja que todas sao iguais... X ou 0
-
-            if tabuleiro[x0] == "X":
-                return 1
-            elif tabuleiro[x0] == "O":
-                return 2
-    return None
-
-
-def vencedor():
-    """
-    vemos as cordenadas, com isso da pra entender as listas abaixo que contem as possiveis sequencias de vitoria, de ambos os jogadores
-    	      |     |
-		   7  |  8  |  9
-		 _____|_____|_____
-		      |     |
-		   4  |  5  |  6
-		 _____|_____|_____
-		      |     |
-		   1  |  2  |  3
-		      |     |
-    """
-
-    lista_cordenadas_horizontal = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    lista_cordenadas_vertical = [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
-    lista_cordendas_diagonal = [[7, 5, 3], [9, 5, 1]]
-
-    resultado_horizontal = testa_pocicoes(lista_cordenadas_horizontal)
-    if not resultado_horizontal == None:
-        return resultado_horizontal
-
-    resultado_vertical = testa_pocicoes(lista_cordenadas_vertical)
-    if not resultado_vertical == None:
-        return resultado_vertical
-
-    resultado_diagonal = testa_pocicoes(lista_cordendas_diagonal)
-    if not resultado_diagonal == None:
-        return resultado_diagonal
-
-
-jogador1 = input("Nome do primeiro jogador: ")
-jogador2 = input("Nome do segundo jogador: ")
-jogadores.append(jogador1)
-jogadores.append(jogador2)
-
-while True:
-
-    imprime()
-    limpar_tabuleiro()
-    imprime()
-
-    while jogadas <= 9:
-
-        while True:
-            pos = input(" Uma jogada %s: " % jogadores[jogador_da_vez])
-
-            if pos in jogadas_possiveis:
-                pos = int(pos)
-                break
             else:
-                print("\n" * 80)
+
+                jogada = int(input('Digite a jogada:'))
+
+            if tabuleiro[jogada - 1] == '-':
+                tabuleiro[jogada - 1] = player
                 imprime()
-                print("***POSICAO INVALIDA***\nJogue novamente")
 
-        jogador_da_vez = jogada(pos, jogador_da_vez)
-        imprime()
-        venceu = vencedor()
-        if venceu == 1:
-            print("Parabéns %s, você venceu!" % jogadores[0])
-            vitorias_um += 1
-            break
-        elif venceu == 2:
-            print("Parabéns %s, você venceu!" % jogadores[1])
-            vitorias_dois += 1
-            break
-        elif jogadas > 9:
+                vitoria = CondVitoria(tabuleiro)
 
-            break
+                if vitoria == True:
+                    print(player, 'ganhou')
+                    quit()
+
+                if player == 'X':
+                    player = 'O'
+
+                else:
+                    player = 'X'
+
+
+            else:
+                continue
         else:
-            jogadas += 1
-    else:
-        print("Partida empatada,nenhum vencendor")
-        empates += 1
-        break
+            print('Deu empate!!!')
+            break
 
-    escolha = input("Deseja jogar novamente com os mesmos jogadores S/N, se deseja sair aperte outra tecla")
-    if escolha.upper() == 'N':
-        jogador1 = input("Nome do primeiro jogador:  ")
-        jogador2 = input("Nome do segundo jogador:  ")
-        jogadores = jogador1, jogador2
-        jogadas = 1
-    elif escolha.upper() == 'S':
-        print("")
 
-        jogadas = 1
-    else:
-        break
+jogada(player)
 
-print("\n" * 60)
-
-print("Fim de Jogo")
-print()
-print("empates ", empates)
-print("Vidorias de %s = %d" % (jogadores[0], vitorias_um))
-print("Vidorias de %s = %d" % (jogadores[1], vitorias_dois))
+test()
