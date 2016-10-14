@@ -1,3 +1,5 @@
+import time
+
 tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
 
 
@@ -16,23 +18,14 @@ def imprime():
 
 
 def CondVitoria(tabuleiro):
-    """
-    GIven a tabuleiro checks if it is in a winning state.
-
-    Arguments:
-          tabuleiro: a list containing X,O or -.
-
-    Return Value:
-           True if tabuleiro in winning state. Else False
-    """
-    ### check if any of the rows has winning combination
+    #checa linhas
     for i in range(3):
         if len(set(tabuleiro[i * 3:i * 3 + 3])) is 1 and tabuleiro[i * 3] is not '-': return True
-    ### check if any of the Columns has winning combination
+    #checa colunas
     for i in range(3):
         if (tabuleiro[i] is tabuleiro[i + 3]) and (tabuleiro[i] is tabuleiro[i + 6]) and tabuleiro[i] is not '-':
             return True
-    ### 2,4,6 and 0,4,8 cases
+    #checa diagonais
     if tabuleiro[0] is tabuleiro[4] and tabuleiro[4] is tabuleiro[8] and tabuleiro[4] is not '-':
         return True
     if tabuleiro[2] is tabuleiro[4] and tabuleiro[4] is tabuleiro[6] and tabuleiro[4] is not '-':
@@ -70,7 +63,7 @@ def proximaJogada(tabuleiro, player):
         return minele, _list[res_list.index(minele)]
 
 
-def test():
+'''def test():
     assert CondVitoria(list("XXX---OOO")) == True
     assert CondVitoria(list('X---OO--X')) == False
     assert CondVitoria(list('X--X--X--')) == True
@@ -86,13 +79,14 @@ def test():
     assert proximaJogada(list('XX-OO-XO-'), 'O') == (-1, 5)
     assert proximaJogada(list('XX--O-XOO'), 'O') == (1, 2)
     return "Casos de teste passados"
+    '''
 
 
 global player
 player = 'X'
 
 
-def jogada(player):
+def PlayerVsAI(player):
     imprime()
     while True:
         proximo = proximaJogada(tabuleiro, player)
@@ -129,7 +123,51 @@ def jogada(player):
             print('Deu empate!!!')
             break
 
+def PlayerVSPlayer(player):
+    imprime()
+    while True:
+            jogada = int(input('Player com '+player+' digite a jogada: '))
 
-jogada(player)
+            if tabuleiro[jogada - 1] == '-':
+                tabuleiro[jogada - 1] = player
+                imprime()
 
-test()
+            else:
+                print('Jogada inválida')
+                continue
+
+            vitoria = CondVitoria(tabuleiro)
+
+            if vitoria == True:
+                print(player, 'ganhou')
+                quit()
+
+            if player == 'X':
+                player = 'O'
+
+            else:
+                player = 'X'
+
+            if tabuleiro.count('-') == 0 and vitoria == False:
+                print('Deu empate!!!')
+                break
+
+def menu():
+
+    escolha = input('Qual modo de jogo vocẽ quer?\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
+    if escolha == '1':
+        PlayerVSPlayer(player)
+    elif escolha == '2':
+        PlayerVsAI(player)
+    elif escolha == '3':
+        print('Em obras')
+    elif escolha == '4':
+        print('Vlw')
+        time.sleep(1)
+        print('Flw')
+        quit()
+    else:
+        print('Escolha errada')
+
+while True:
+    menu()
