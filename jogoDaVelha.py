@@ -55,7 +55,7 @@ def testa_pocicoes(lista=[]):
     sendo elas as horizontais, verticais e diagonal... """
 
     for cordenadas in lista:
-        # variaveis que vao receber as coordenadas da lista lista_cordenadas_horizontal=[[1,2,3],[4,5,6],[7,8,9]]
+        # variaveis que vao receber as coordenadas das listas que estao na funcao vencedor...
         x0 = cordenadas[0]
         x1 = cordenadas[1]
         x2 = cordenadas[2]
