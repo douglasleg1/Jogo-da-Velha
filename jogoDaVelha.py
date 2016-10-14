@@ -1,6 +1,6 @@
 import time
 
-tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
+
 
 
 def imprime():
@@ -108,7 +108,7 @@ def PlayerVsAI(player):
 
                 if vitoria == True:
                     print(player, 'ganhou')
-                    quit()
+                    break
 
                 if player == 'X':
                     player = 'O'
@@ -153,7 +153,6 @@ def PlayerVSPlayer(player):
                 break
 
 def menu():
-
     escolha = input('Qual modo de jogo vocẽ quer?\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
     if escolha == '1':
         PlayerVSPlayer(player)
@@ -170,4 +169,5 @@ def menu():
         print('Escolha errada')
 
 while True:
+    tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
     menu()
