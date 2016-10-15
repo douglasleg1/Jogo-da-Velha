@@ -1,7 +1,5 @@
 import time
-
-
-
+from random import randint
 
 def imprime():
     print("")
@@ -63,45 +61,35 @@ def proximaJogada(tabuleiro, player):
         return minele, _list[res_list.index(minele)]
 
 
-'''def test():
-    assert CondVitoria(list("XXX---OOO")) == True
-    assert CondVitoria(list('X---OO--X')) == False
-    assert CondVitoria(list('X--X--X--')) == True
-    assert CondVitoria(list('X-O-OO--X')) == False
-    assert CondVitoria(list('X-OOX--OX')) == True
-    assert CondVitoria(list('X-OOO-O-X')) == True
-    assert proximaJogada(list('X----O-XO'), 'X') == (1, 2)
-    assert proximaJogada(list('OXX---XOO'), 'X') == (1, 4)
-    assert proximaJogada(list('XX---OO-O'), 'X') == (1, 2)
-    assert proximaJogada(list('---------'), 'X') == (0, 4)
-    assert proximaJogada(list('XXOOO-XO-'), 'X') == (0, 5)
-    assert proximaJogada(list('OO-XXO-XO'), 'X') == (0, 2)
-    assert proximaJogada(list('XX-OO-XO-'), 'O') == (-1, 5)
-    assert proximaJogada(list('XX--O-XOO'), 'O') == (1, 2)
-    return "Casos de teste passados"
-    '''
-
-
 global player
 player = 'X'
 
 
 def PlayerVsAI(player):
+    respostas = ['Essa tá muito fácil, ganho em 3 minutos e explicando...',
+                 'Você pode empatar?\nPode!\nVai ganhar?\nNão',
+                 '\'Resolva\' essa',
+                 'Vamo ver se cê é o bichão mermo hein',
+                 'ez game, ez life']
     imprime()
     while True:
         proximo = proximaJogada(tabuleiro, player)
         if proximo[1] != -1:
             if player == 'O':
                 proximo = proximaJogada(tabuleiro, player)
-                print('MinMax jogando')
+                print('Vez do computador')
+                time.sleep(0.5)
+                print('Computador: '+respostas[randint(0,len(respostas)-1)])
                 jogada = proximo[1] + 1
 
             else:
 
-                jogada = int(input('Digite a jogada:'))
+                jogada = int(input('Jogador com o %s, digite a sua jogada:' %player))
 
             if tabuleiro[jogada - 1] == '-':
                 tabuleiro[jogada - 1] = player
+                print('\n')
+                print ('\t\t\tJogada válida!')
                 imprime()
 
                 vitoria = CondVitoria(tabuleiro)
@@ -115,9 +103,8 @@ def PlayerVsAI(player):
 
                 else:
                     player = 'X'
-
-
             else:
+                print('Jogada inválida, casa ocupada, tente novamente')
                 continue
         else:
             print('Deu empate!!!')
@@ -133,7 +120,7 @@ def PlayerVSPlayer(player):
                 imprime()
 
             else:
-                print('Jogada inválida')
+                print('Jogada inválida, casa ocupada, tente novamente')
                 continue
 
             vitoria = CondVitoria(tabuleiro)
@@ -153,7 +140,21 @@ def PlayerVSPlayer(player):
                 break
 
 def menu():
-    escolha = input('Qual modo de jogo vocẽ quer?\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
+
+    print('\t\tJogue usando as posições: ')
+    print("")
+    print("\t\t      |     |     ")
+    print("\t\t   7  |  8  |  9  ")
+    print("\t\t _____|_____|_____")
+    print("\t\t      |     |     ")
+    print("\t\t   4  |  5  |  6  ")
+    print("\t\t _____|_____|_____")
+    print("\t\t      |     |     ")
+    print("\t\t   1  |  2  |  3 " )
+    print("\t\t      |     |     ")
+    print("")
+
+    escolha = input('Escolha um modo de jogo:\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
     if escolha == '1':
         PlayerVSPlayer(player)
     elif escolha == '2':
