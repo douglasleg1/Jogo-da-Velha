@@ -86,7 +86,7 @@ global player
 player = 'X'
 
 
-def PlayerVsAI(player):
+def PlayerVsAI(player,tabuleiro):
     imprime()
     while True:
         proximo = proximaJogada(tabuleiro, player)
@@ -108,6 +108,8 @@ def PlayerVsAI(player):
 
                 if vitoria == True:
                     print(player, 'ganhou')
+                    for j in range(len(tabuleiro)):
+                        tabuleiro[j] = '-'
                     quit()
 
                 if player == 'X':
@@ -121,9 +123,11 @@ def PlayerVsAI(player):
                 continue
         else:
             print('Deu empate!!!')
+            for j in range(len(tabuleiro)):
+                        tabuleiro[j] = '-'
             break
 
-def PlayerVSPlayer(player):
+def PlayerVSPlayer(player,tabuleiro):
     imprime()
     while True:
             jogada = int(input('Player com '+player+' digite a jogada: '))
@@ -140,6 +144,8 @@ def PlayerVSPlayer(player):
 
             if vitoria == True:
                 print(player, 'ganhou')
+                for j in range(len(tabuleiro)):
+                        tabuleiro[j] = '-'
                 quit()
 
             if player == 'X':
@@ -150,15 +156,17 @@ def PlayerVSPlayer(player):
 
             if tabuleiro.count('-') == 0 and vitoria == False:
                 print('Deu empate!!!')
+                for j in range(len(tabuleiro)):
+                        tabuleiro[j] = '-'
                 break
 
 def menu():
 
     escolha = input('Qual modo de jogo vocẽ quer?\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
     if escolha == '1':
-        PlayerVSPlayer(player)
+        PlayerVSPlayer(player,tabuleiro)
     elif escolha == '2':
-        PlayerVsAI(player)
+        PlayerVsAI(player,tabuleiro)
     elif escolha == '3':
         print('Em obras')
     elif escolha == '4':
