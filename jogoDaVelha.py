@@ -1,8 +1,6 @@
-
 import time, socket
-from random import randint
 
-def imprime():
+def imprime(tabuleiro):
     print("")
     print("\t\t      |     |     ")
     print("\t\t   %s  |  %s  |  %s " % (tabuleiro[6], tabuleiro[7], tabuleiro[8]))
@@ -30,7 +28,6 @@ def CondVitoria(tabuleiro):
     if tabuleiro[2] is tabuleiro[4] and tabuleiro[4] is tabuleiro[6] and tabuleiro[4] is not '-':
         return True
     return False
-
 
 def proximaJogada(tabuleiro, player):
     if len(set(tabuleiro)) == 1: return 0, 4
@@ -61,9 +58,9 @@ def proximaJogada(tabuleiro, player):
         minele = min(res_list)
         return minele, _list[res_list.index(minele)]
 
-def PlayerVsAI(player):
+def PlayerVsAI(player,tabuleiro):
 
-    imprime()
+    imprime(tabuleiro)
     while True:
         proximo = proximaJogada(tabuleiro, player)
         if proximo[1] != -1:
@@ -87,7 +84,7 @@ def PlayerVsAI(player):
                 tabuleiro[jogada - 1] = player
                 print('\n')
                 print ('\t\t\tJogada válida!')
-                imprime()
+                imprime(tabuleiro)
 
                 vitoria = CondVitoria(tabuleiro)
 
@@ -107,14 +104,14 @@ def PlayerVsAI(player):
             print('\t\tDeu empate!!!\n')
             break
 
-def PlayerVSPlayer(player):
-    imprime()
+def PlayerVSPlayer(player,tabuleiro):
+    imprime(tabuleiro)
     while True:
             jogada = int(input('Jogador com o %s, digite a sua jogada:' %player))
 
             if tabuleiro[jogada - 1] == '-':
                 tabuleiro[jogada - 1] = player
-                imprime()
+                imprime(tabuleiro)
 
             else:
                 print('Jogada inválida, casa ocupada, tente novamente\n')
@@ -136,10 +133,10 @@ def PlayerVSPlayer(player):
                 print('Deu empate!!!\n')
                 break
 
-def Client(player):
+def Client(player,tabuleiro):
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect(('localhost', 8089))
-    imprime()
+    imprime(tabuleiro)
 
     while True:
         proximo = proximaJogada(tabuleiro, player)
@@ -157,7 +154,7 @@ def Client(player):
                 tabuleiro[jogada - 1] = player
                 print('\n')
                 print('\t\t\tJogada válida!')
-                imprime()
+                imprime(tabuleiro)
 
                 vitoria = CondVitoria(tabuleiro)
 
@@ -177,14 +174,14 @@ def Client(player):
             print('Deu empate!!!\n')
             break
 
-def Server(player):
-    imprime()
+def Server(player,tabuleiro):
+    imprime(tabuleiro)
     while True:
             jogada = int(input('Jogador com o %s, digite a sua jogada:' %player))
 
             if tabuleiro[jogada - 1] == '-':
                 tabuleiro[jogada - 1] = player
-                imprime()
+                imprime(tabuleiro)
 
             else:
                 print('Jogada inválida, casa ocupada, tente novamente\n')
@@ -208,6 +205,7 @@ def Server(player):
 
 
 def menu():
+
     player = 'X'
     print('\t\tJogue usando as posições: ')
     print("")
@@ -221,21 +219,22 @@ def menu():
     print("\t\t   1  |  2  |  3  ")
     print("\t\t      |     |     ")
     print("")
-    while True:
 
+    while True:
+        tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
         escolha = input('Escolha um modo de jogo:\n1 - Player vs Player (local)\n2 - Player vs Computador\n3 - Player vs Player (Remoto)\n4 - Sair\n\n')
         if escolha == '1':
-            PlayerVSPlayer(player)
+            PlayerVSPlayer(player, tabuleiro)
         elif escolha == '2':
-            PlayerVsAI(player)
+            PlayerVsAI(player,tabuleiro)
         elif escolha == '3':
             server_client = input('Você deseja ser o [s]ervidor ou o [c]liente?\nObs: O servidor jogará com o X e o Cliente com o O')
             if server_client == 'c':
                 player = 'O'
-                Client(player)
+                Client(player,tabuleiro)
             elif server_client == 's':
                 player = 'X'
-                Server(player)
+                Server(player,tabuleiro)
         elif escolha == '4':
             print('Vlw')
             time.sleep(1)
@@ -245,6 +244,4 @@ def menu():
             print('Opção inválida!\n')
             continue
 
-while True:
-    tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
-    menu()
+menu()
