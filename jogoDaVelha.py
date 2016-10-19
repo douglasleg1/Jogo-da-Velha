@@ -367,6 +367,8 @@ def Server(player, tabuleiro):
 
 def menu():
     player = 'X'
+    print('\t\t\t\t\tOLD-LADY\nCriado por Douglas Dantas, Leonardo Silva e Marlon Costa')
+    print("")
     print('\t\tJogue usando as posições: ')
     print("")
     print("\t\t      |     |     ")
@@ -379,6 +381,7 @@ def menu():
     print("\t\t   1  |  2  |  3  ")
     print("\t\t      |     |     ")
     print("")
+    print('\t\tE as letras X e O\n')
 
     while True:
         tabuleiro = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
@@ -392,7 +395,7 @@ def menu():
             while True:
 
                 server_client = input(
-                    'Você deseja ser o (1) - Servidor ou o (2) - cliente?\nObs: O servidor jogará com o X e o Cliente com o O')
+                    'Escolha uma opção de conexão:\n\t1 - Servidor (jogará com o X)\n\t2 - Cliente (jogará com o O)\n')
                 if server_client == '2':
                     Client(player, tabuleiro)
                     break
