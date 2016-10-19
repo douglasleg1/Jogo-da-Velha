@@ -20,7 +20,9 @@ Jogo da Velha criado por Douglas Dantas, Marlon Costa e Leonardo Silva, como **p
     
     Aqui deve ser escolhido um servidor e um cliente, onde o servidor deverá informar sua identificação
     
-    ao cliente, para que este possa se conectar a ele. O servidor jogará com o X, enquanto o cliente jogará com o O.
+    ao cliente, para que este possa se conectar a ele.
+    
+    O servidor jogará com o X, enquanto o cliente jogará com o O.
     
 ##**Instruções:**
 Jogue usando as posições: 
