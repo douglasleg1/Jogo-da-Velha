@@ -134,7 +134,7 @@ def PlayerVSPlayer(player,tabuleiro):
 
 def Client(player,tabuleiro):
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
+    host = ''
     port = 8089
     clientsocket.connect((host, port))
     print('Conectado a', host)
@@ -199,7 +199,7 @@ def Client(player,tabuleiro):
 
 def Server(player,tabuleiro):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
+    host = ''
     port = 8089
 
     serversocket.bind((host, port))
