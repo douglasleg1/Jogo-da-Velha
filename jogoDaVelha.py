@@ -13,7 +13,6 @@ def imprime(tabuleiro):
     print("\t\t      |     |     ")
     print("")
 
-
 def CondVitoria(tabuleiro):
     #checa linhas
     for i in range(3):
@@ -135,54 +134,47 @@ def PlayerVSPlayer(player,tabuleiro):
 
 def Client(player,tabuleiro):
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    clientsocket.connect(('localhost', 8089))
+    host = socket.gethostname()
+    port = 8089
+    clientsocket.connect((host, port))
+    print('Conectado a', host)
     imprime(tabuleiro)
 
     while True:
-        proximo = proximaJogada(tabuleiro, player)
-        if proximo[1] != -1:
+
+        if player == 'X':
+            print('Vez do X')
+            jogada = clientsocket.recv(1024)
+            jogada = int(jogada.decode('utf-8'))
+            tabuleiro[jogada - 1] = player
+            print('\n')
+            print('\t\t\tJogada válida!')
+            imprime(tabuleiro)
+
+            vitoria = CondVitoria(tabuleiro)
+
+            if vitoria == True:
+                print(player, 'ganhou, parabéns!\n')
+                clientsocket.shutdown(socket.SHUT_RDWR)
+                clientsocket.close()
+                break
+
             if player == 'X':
-                print('Vez do X')
-                time.sleep(0.5)
-                jogada = clientsocket.recv(64) + 1
+                player = 'O'
 
             else:
+                player = 'X'
 
-                jogada = int(input('Jogador com o %s, digite a sua jogada:' % player))
+        else:
+            print('Vez do O')
+            jogada = int(input('Jogador com o %s, digite a sua jogada:' % player))
 
             if tabuleiro[jogada - 1] == '-':
+                clientsocket.send(str(jogada).encode('utf-8'))
                 tabuleiro[jogada - 1] = player
                 print('\n')
                 print('\t\t\tJogada válida!')
                 imprime(tabuleiro)
-
-                vitoria = CondVitoria(tabuleiro)
-
-                if vitoria == True:
-                    print(player, 'ganhou, parabéns!\n')
-                    break
-
-                if player == 'X':
-                    player = 'O'
-
-                else:
-                    player = 'X'
-            else:
-                print('Jogada inválida, casa ocupada, tente novamente\n')
-                continue
-        else:
-            print('Deu empate!!!\n')
-            break
-
-def Server(player,tabuleiro):
-    imprime(tabuleiro)
-    while True:
-            jogada = int(input('Jogador com o %s, digite a sua jogada:' %player))
-
-            if tabuleiro[jogada - 1] == '-':
-                tabuleiro[jogada - 1] = player
-                imprime(tabuleiro)
-
             else:
                 print('Jogada inválida, casa ocupada, tente novamente\n')
                 continue
@@ -191,6 +183,8 @@ def Server(player,tabuleiro):
 
             if vitoria == True:
                 print(player, 'ganhou, parabéns!\n')
+                clientsocket.shutdown(socket.SHUT_RDWR)
+                clientsocket.close()
                 break
 
             if player == 'X':
@@ -202,6 +196,81 @@ def Server(player,tabuleiro):
             if tabuleiro.count('-') == 0 and vitoria == False:
                 print('Deu empate!!!\n')
                 break
+
+def Server(player,tabuleiro):
+    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host = socket.gethostname()
+    port = 8089
+
+    serversocket.bind((host, port))
+
+    serversocket.listen(5)  # become a server socket, maximum 5 connections
+    connection = None
+    imprime(tabuleiro)
+
+    while True:
+        if connection == None:
+            print('Aguardando conexão')
+            connection, address = serversocket.accept()
+            print('Conectado com', address[0])
+        else:
+            while True:
+                if player == 'O':
+                    print('Vez do O')
+                    jogada = connection.recv(1024)
+                    jogada = int(jogada.decode('utf-8'))
+                    tabuleiro[jogada - 1] = player
+                    print('\n')
+                    print('\t\t\tJogada válida!')
+                    imprime(tabuleiro)
+
+                    vitoria = CondVitoria(tabuleiro)
+
+                    if vitoria == True:
+                        print(player, 'ganhou, parabéns!\n')
+                        serversocket.shutdown(socket.SHUT_RDWR)
+                        serversocket.close()
+                        break
+
+                    if player == 'X':
+                        player = 'O'
+
+                    else:
+                        player = 'X'
+
+                else:
+                    print('Vez do X')
+                    jogada = int(input('Jogador com o %s, digite a sua jogada:' %player))
+
+                    if tabuleiro[jogada - 1] == '-':
+                        connection.send(str(jogada).encode('utf-8'))
+                        tabuleiro[jogada - 1] = player
+                        print('\n')
+                        print('\t\t\tJogada válida!')
+                        imprime(tabuleiro)
+
+                        vitoria = CondVitoria(tabuleiro)
+
+                        if vitoria == True:
+                            print(player, 'ganhou, parabéns!\n')
+                            serversocket.shutdown(socket.SHUT_RDWR)
+                            serversocket.close()
+                            break
+
+                        if player == 'X':
+                            player = 'O'
+
+                        else:
+                            player = 'X'
+
+                    else:
+                        print('Jogada inválida, casa ocupada, tente novamente\n')
+                        continue
+
+                if tabuleiro.count('-') == 0 and vitoria == False:
+                    print('Deu empate!!!\n')
+                    break
+            break
 
 
 def menu():
@@ -230,10 +299,8 @@ def menu():
         elif escolha == '3':
             server_client = input('Você deseja ser o [s]ervidor ou o [c]liente?\nObs: O servidor jogará com o X e o Cliente com o O')
             if server_client == 'c':
-                player = 'O'
                 Client(player,tabuleiro)
             elif server_client == 's':
-                player = 'X'
                 Server(player,tabuleiro)
         elif escolha == '4':
             print('Vlw')
