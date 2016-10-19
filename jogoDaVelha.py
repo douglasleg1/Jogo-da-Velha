@@ -134,7 +134,8 @@ def PlayerVSPlayer(player,tabuleiro):
 
 def Client(player,tabuleiro):
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
+    #host = socket.gethostname()
+    host = input("Digite a identificação do outro usuário: ")
     port = 8089
     clientsocket.connect((host, port))
     print('Conectado a', host)
@@ -201,7 +202,7 @@ def Server(player,tabuleiro):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = socket.gethostname()
     port = 8089
-
+    print("Divulgue para o seu adversário a sua identificação: ",host)
     serversocket.bind((host, port))
 
     serversocket.listen(5)  # become a server socket, maximum 5 connections
