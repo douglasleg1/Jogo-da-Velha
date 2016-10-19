@@ -123,6 +123,7 @@ def PlayerVSPlayer(player,tabuleiro):
                 except ValueError or IndexError:
                     print("Valor Inválido!")
 
+
             if tabuleiro[jogada - 1] == '-':
                 tabuleiro[jogada - 1] = player
                 imprime(tabuleiro)
