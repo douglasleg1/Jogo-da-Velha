@@ -178,14 +178,20 @@ def Client(player, tabuleiro):
                 print("Digite a identificação correta!")
                 continue
 
-    host = identificaHost()
-    port = 8089
+
     while True:
         try:
+            host = identificaHost()
+            port = 8089
             clientsocket.connect((host, port))
             break
         except socket.gaierror:
+            print("Player identificado inexistente, tente novamente!")
             continue
+        except TimeoutError:
+            print("Player identificado indisponível, tente novamente!")
+            continue
+
     print('Conectado a', host)
     imprime(tabuleiro)
 
